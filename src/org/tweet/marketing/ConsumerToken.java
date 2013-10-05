@@ -1,10 +1,10 @@
 package org.tweet.marketing;
 
-public class ConsumerInformation {
+public class ConsumerToken {
 	private String consumerKey;
 	private String consumerSecret;
 
-	public ConsumerInformation(String consumerKey, String consumerSecret) {
+	public ConsumerToken(String consumerKey, String consumerSecret) {
 		this.consumerKey = consumerKey;
 		this.consumerSecret = consumerSecret;
 	}

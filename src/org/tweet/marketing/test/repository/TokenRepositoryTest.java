@@ -13,7 +13,7 @@ import java.util.Properties;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.tweet.marketing.ConsumerInformation;
+import org.tweet.marketing.ConsumerToken;
 import org.tweet.marketing.repository.TokenRepository;
 
 import twitter4j.auth.AccessToken;
@@ -44,7 +44,7 @@ public class TokenRepositoryTest {
 	@Test
 	public void testStoreAccessToken() throws IOException {
 		AccessToken accessToken = new AccessToken("fakeToken", "fakeSecret");
-		int mockUserId = 1234;
+		long mockUserId = 1234L;
 		tokenRepository.storeAccessToken(mockUserId, accessToken);
 		AccessToken returnTokenAccess = tokenRepository.getAccessToken(mockUserId);
 		assertTrue(accessToken.getToken().equalsIgnoreCase(returnTokenAccess.getToken()));
@@ -54,12 +54,12 @@ public class TokenRepositoryTest {
 
 	@Test
 	public void testStoreConsumerInformation() throws IOException {
-		ConsumerInformation consumerInformation = new ConsumerInformation("fakeConsumerKey", "fakeConsumerSecret");
+		ConsumerToken consumerToken = new ConsumerToken("fakeConsumerKey", "fakeConsumerSecret");
 		String userName = "fakeUserName";
-		tokenRepository.storeConsumerInformation(userName, consumerInformation);
-		ConsumerInformation returnconsumerInformation = tokenRepository.getConsumerInfo(userName);
-		assertTrue(consumerInformation.getConsumerKey().equalsIgnoreCase(returnconsumerInformation.getConsumerKey()));
-		assertTrue(consumerInformation.getConsumerSecret().equalsIgnoreCase(returnconsumerInformation.getConsumerSecret()));	
+		tokenRepository.storeConsumerToken(userName, consumerToken);
+		ConsumerToken returnconsumerToken = tokenRepository.getConsumerToken(userName);
+		assertTrue(consumerToken.getConsumerKey().equalsIgnoreCase(returnconsumerToken.getConsumerKey()));
+		assertTrue(consumerToken.getConsumerSecret().equalsIgnoreCase(returnconsumerToken.getConsumerSecret()));	
 	
 	}
 

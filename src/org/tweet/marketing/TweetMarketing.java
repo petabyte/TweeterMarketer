@@ -3,6 +3,8 @@ package org.tweet.marketing;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import org.tweet.marketing.repository.TokenRepository;
+
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -11,10 +13,13 @@ import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
 public class TweetMarketing {
+	private static final String TWEETER_PROMO = "Tweeter_Promo";
 	public static void main(String args[]) throws Exception {
 		// The factory instance is re-useable and thread safe.
 		Twitter twitter = TwitterFactory.getSingleton();
-		twitter.setOAuthConsumer("[consumer key]", "[consumer secret]");
+		TokenRepository tokenRepository = new TokenRepository();
+		ConsumerToken consumerToken = tokenRepository.getConsumerToken(TWEETER_PROMO);
+		twitter.setOAuthConsumer(consumerToken.getConsumerKey(), consumerToken.getConsumerSecret());
 		RequestToken requestToken = twitter.getOAuthRequestToken();
 		AccessToken accessToken = null;
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -41,7 +46,7 @@ public class TweetMarketing {
 			}
 		}
 		// persist to the accessToken for future reference.
-		//sstoreAccessToken(twitter.verifyCredentials().getId(), accessToken);
+		tokenRepository.storeAccessToken(twitter.verifyCredentials().getId(), accessToken);
 		Status status = twitter.updateStatus(args[0]);
 		System.out.println("Successfully updated the status to ["
 				+ status.getText() + "].");

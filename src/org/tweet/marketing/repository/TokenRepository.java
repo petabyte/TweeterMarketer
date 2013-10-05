@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.tweet.marketing.ConsumerInformation;
+import org.tweet.marketing.ConsumerToken;
 
 import twitter4j.auth.AccessToken;
 /**
@@ -37,7 +37,7 @@ public class TokenRepository {
     /*
      *Store the AccessToken in the properties file 
      */
-	public void storeAccessToken(int userId, AccessToken accessToken) throws IOException {
+	public void storeAccessToken(long userId, AccessToken accessToken) throws IOException {
 		consumerAccessProperties.setProperty(userId + TOKEN,
 				accessToken.getToken());
 		consumerAccessProperties.setProperty(userId + TOKEN_SECRET,
@@ -51,7 +51,7 @@ public class TokenRepository {
      * @param userId comes from Twitter Credentials
      * @return
      */
-	public AccessToken getAccessToken(int userId) {
+	public AccessToken getAccessToken(long userId) {
 		String token = consumerAccessProperties.getProperty(userId + TOKEN);
 		String tokenSecret = consumerAccessProperties.getProperty(userId
 				+ TOKEN_SECRET);
@@ -62,23 +62,23 @@ public class TokenRepository {
      * 
      * @return
      */
-	public ConsumerInformation getConsumerInfo(String userName) {
+	public ConsumerToken getConsumerToken (String userName) {
 		String consumerKey = consumerAccessProperties.getProperty(userName + CONSUMER_KEY);
 		String consumerSecret = consumerAccessProperties.getProperty(userName
 				+ CONSUMER_SECRET);
-		ConsumerInformation returnConsumerInfo = new ConsumerInformation(consumerKey, consumerSecret);
+		ConsumerToken returnConsumerInfo = new ConsumerToken(consumerKey, consumerSecret);
 		return returnConsumerInfo;
 	}
     /**
      * 
-     * @param consumerInfo
+     * @param consumerToken
      * @throws IOException 
      */
-	public void storeConsumerInformation(String userName, ConsumerInformation consumerInfo) throws IOException {
+	public void storeConsumerToken(String userName, ConsumerToken consumerToken) throws IOException {
 		consumerAccessProperties.setProperty(userName + CONSUMER_KEY,
-				consumerInfo.getConsumerKey());
+				consumerToken.getConsumerKey());
 		consumerAccessProperties.setProperty(userName + CONSUMER_SECRET,
-				consumerInfo.getConsumerSecret());
+				consumerToken.getConsumerSecret());
         saveProperties();
 	}
 	
