@@ -3,7 +3,8 @@ package org.tweet.marketing;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import org.tweet.marketing.repository.TokenRepository;
+import org.tweet.marketing.repository.TokenRepositoryDAO;
+import org.tweet.marketing.repository.TokenRepositoryMapper;
 
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -14,12 +15,15 @@ import twitter4j.auth.RequestToken;
 
 public class TweetMarketing {
 	private static final String TWEETER_PROMO = "Tweeter_Promo";
+
 	public static void main(String args[]) throws Exception {
 		// The factory instance is re-useable and thread safe.
 		Twitter twitter = TwitterFactory.getSingleton();
-		TokenRepository tokenRepository = new TokenRepository();
-		ConsumerToken consumerToken = tokenRepository.getConsumerToken(TWEETER_PROMO);
-		twitter.setOAuthConsumer(consumerToken.getConsumerKey(), consumerToken.getConsumerSecret());
+		TokenRepositoryDAO tokenRepository = new TokenRepositoryDAO();
+		ConsumerToken consumerToken = tokenRepository
+				.getConsumerToken(TWEETER_PROMO);
+		twitter.setOAuthConsumer(consumerToken.getConsumerKey(),
+				consumerToken.getConsumerSecret());
 		RequestToken requestToken = twitter.getOAuthRequestToken();
 		AccessToken accessToken = null;
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -46,7 +50,17 @@ public class TweetMarketing {
 			}
 		}
 		// persist to the accessToken for future reference.
-		tokenRepository.storeAccessToken(twitter.verifyCredentials().getId(), accessToken);
+		org.tweet.marketing.AccessToken accessTokenTweet = new org.tweet.marketing.AccessToken();
+		String userId = Long.toString(accessToken.getUserId());
+		
+		Credential credential = new Credential();
+		credential.setUserId(userId);
+		credential.setUserName(TWEETER_PROMO);
+		accessTokenTweet.setUserId(userId);
+		accessTokenTweet.setAccessKey(accessToken.getToken());
+		accessTokenTweet.setAccessSecret(accessToken.getTokenSecret());
+		tokenRepository.insertAccessToken(accessTokenTweet);
+		tokenRepository.insertCredential(credential);
 		Status status = twitter.updateStatus(args[0]);
 		System.out.println("Successfully updated the status to ["
 				+ status.getText() + "].");

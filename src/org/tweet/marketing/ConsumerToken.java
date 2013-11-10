@@ -1,14 +1,11 @@
 package org.tweet.marketing;
 
 public class ConsumerToken {
+	private String userName;
 	private String consumerKey;
 	private String consumerSecret;
 
-	public ConsumerToken(String consumerKey, String consumerSecret) {
-		this.consumerKey = consumerKey;
-		this.consumerSecret = consumerSecret;
-	}
-
+	
 	public String getConsumerKey() {
 		return consumerKey;
 	}
@@ -23,5 +20,13 @@ public class ConsumerToken {
 
 	public void setConsumerSecret(String consumerSecret) {
 		this.consumerSecret = consumerSecret;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 }

@@ -2,6 +2,8 @@ package org.tweet.marketing.test;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.tweet.marketing.Credential;
+import org.tweet.marketing.repository.TokenRepositoryDAO;
 
 import twitter4j.Query;
 import twitter4j.QueryResult;
@@ -15,13 +17,16 @@ public class TestATweet {
 
 	private Twitter twitter = null;
 	@Before
-	public void setUp(){
+	public void setUp() throws Exception{
+		TokenRepositoryDAO tokenDao = new TokenRepositoryDAO();
+		String userId = "1938854540";
+		Credential credential = tokenDao.getCredential(userId);
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true)
-		  .setOAuthConsumerKey("jtUPig5EFBlFdV0kVCANLQ")
-		  .setOAuthConsumerSecret("4zvp69Rq42z3go2YipxU1aySYtpTN0ralvnUEBZWI")
-		  .setOAuthAccessToken("321402005-EdF998r662mhOPbaSIi2nWCKNXboCKJm5L7wLyUf")
-		  .setOAuthAccessTokenSecret("qwb9ggeBurRUJyxQ7IuvNIlboHZvCi85qkelFdKh3o");
+		  .setOAuthConsumerKey(credential.getConsumerToken().getConsumerKey())
+		  .setOAuthConsumerSecret(credential.getConsumerToken().getConsumerSecret())
+		  .setOAuthAccessToken(credential.getAccessToken().getAccessKey())
+		  .setOAuthAccessTokenSecret(credential.getAccessToken().getAccessSecret());
 		TwitterFactory tf = new TwitterFactory(cb.build());
 		twitter = tf.getInstance();
 		
@@ -30,13 +35,17 @@ public class TestATweet {
 	@Test
 	public void testTweet() throws TwitterException{
 
-	    Status status = twitter.updateStatus("I am in SEIS635 right now!");
-	    System.out.println("Successfully updated the status to [" + status.getText() + "].");
+		for (int i = 0;i < 50; i++){
+			Status status = twitter.updateStatus("This is my tweet SEIS635 " + i + " #thisisatweet");
+			System.out.println("Successfully updated the status to [" + status.getText() + "].");
+		}
+	    
+	    
 	}
 	
 	@Test
 	public void testSearchTweet() throws TwitterException{
-		   Query query = new Query("source:petabyteflop This rocks!");
+		   Query query = new Query("#thisisatweet");
 		    QueryResult result = twitter.search(query);
 		    for (Status status : result.getTweets()) {
 		        System.out.println("@" + status.getUser().getScreenName() + ":" + status.getText());
