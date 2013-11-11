@@ -1,11 +1,16 @@
 package org.tweet.marketing;
 
-public class ConsumerToken {
+import java.io.Serializable;
+
+public class ConsumerToken implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5530153697223565842L;
 	private String userName;
 	private String consumerKey;
 	private String consumerSecret;
 
-	
 	public String getConsumerKey() {
 		return consumerKey;
 	}

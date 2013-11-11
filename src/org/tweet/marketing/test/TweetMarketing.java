@@ -1,8 +1,10 @@
-package org.tweet.marketing;
+package org.tweet.marketing.test;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import org.tweet.marketing.ConsumerToken;
+import org.tweet.marketing.Credential;
 import org.tweet.marketing.repository.TokenRepositoryDAO;
 import org.tweet.marketing.repository.TokenRepositoryMapper;
 
