@@ -13,6 +13,7 @@ import org.quartz.SchedulerException;
 import org.tweet.marketing.Campaign;
 import org.tweet.marketing.Credential;
 import org.tweet.marketing.Scheduler;
+import org.tweet.marketing.Scheduler.JobType;
 import org.tweet.marketing.repository.TokenRepositoryDAO;
 
 import twitter4j.Paging;
@@ -57,7 +58,7 @@ public class SchedulerTest {
     	SecureRandom random = new SecureRandom();
     	String randomString = new BigInteger(130, random).toString(32);
 		campaign.setTweetText("This is a test schedule job "+ randomString);
-		boolean submitted = scheduler.submitJob(campaign);
+		boolean submitted = scheduler.submitCampaignJob(campaign);
 		//Sleep to so that the job will fire at least once
 		Thread.sleep(5000);
 		Status latestStatus = null;
@@ -74,7 +75,7 @@ public class SchedulerTest {
     	SecureRandom random = new SecureRandom();
     	String randomString = new BigInteger(130, random).toString(32);
 		campaign.setTweetText("This is a test schedule job "+ randomString);
-		boolean submitted = scheduler.submitJob(campaign);
+		boolean submitted = scheduler.submitCampaignJob(campaign);
 		//Sleep to so that the job will fire at least once
 		Thread.sleep(5000);
 		Status latestStatus = null;
@@ -83,7 +84,7 @@ public class SchedulerTest {
 			latestStatus = statuses.get(0);
 		}
 		assertTrue(latestStatus.getText().equalsIgnoreCase(campaign.getTweetText()));
-		boolean stopped = scheduler.stopJob(campaign);
+		boolean stopped = scheduler.stopJob(campaign, JobType.CAMPAIGN);
 		assertTrue(stopped);
 	}
 	

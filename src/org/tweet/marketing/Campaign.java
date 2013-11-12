@@ -13,6 +13,7 @@ public class Campaign implements Serializable {
 	private Credential credential;
 	private int intervalInSeconds;
 	private Twitter twitter;
+	private Monitor monitor;
 
 	public String getTweetText() {
 		return tweetText;
@@ -44,5 +45,13 @@ public class Campaign implements Serializable {
 
 	public void setTwitter(Twitter twitter) {
 		this.twitter = twitter;
+	}
+
+	public Monitor getMonitor() {
+		return monitor;
+	}
+
+	public void setMonitor(Monitor monitor) {
+		this.monitor = monitor;
 	}
 }

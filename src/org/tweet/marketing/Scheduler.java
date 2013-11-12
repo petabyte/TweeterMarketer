@@ -21,25 +21,25 @@ import org.quartz.impl.StdSchedulerFactory;
  */
 public class Scheduler {
 	private static final String TWEET_GROUP = "TweetGroup1";
-	private static final String CAMPAIGN = "campaign";
 	SchedulerFactory schFactory = new StdSchedulerFactory();
-
-	public boolean submitJob(Campaign campaign) throws SchedulerException {
+	
+	public boolean submitCampaignJob(Campaign campaign) throws SchedulerException{
 		boolean returnBoolean = false;
 		JobDataMap jobDataMap = new JobDataMap();
-		jobDataMap.put(CAMPAIGN, campaign);
+		jobDataMap.put(JobType.CAMPAIGN.value, campaign);
 		JobDetail tweetJob = JobBuilder
-				.newJob(CampaignJob.class)
-				.withIdentity(campaign.getCredential().getUserId(), TWEET_GROUP)
-				.usingJobData(jobDataMap).build();
-		Trigger tweetTrigger = TriggerBuilder
-				.newTrigger()
-				.withSchedule(
-						SimpleScheduleBuilder
-								.simpleSchedule()
-								.withIntervalInSeconds(
-										campaign.getIntervalInSeconds())
-								.repeatForever()).build();
+					.newJob(CampaignJob.class)
+					.withIdentity(campaign.getCredential().getUserId() + "_" + JobType.CAMPAIGN.value, TWEET_GROUP)
+					.usingJobData(jobDataMap).build();
+
+		Trigger tweetTrigger= TriggerBuilder
+					.newTrigger()
+					.withSchedule(
+							SimpleScheduleBuilder
+									.simpleSchedule()
+									.withIntervalInSeconds(
+											campaign.getIntervalInSeconds())
+									.repeatForever()).build();
 		org.quartz.Scheduler scheduler = schFactory.getScheduler();
 		if (!scheduler.isStarted()) {
 			scheduler.start();
@@ -49,13 +49,42 @@ public class Scheduler {
 			returnBoolean = true;
 		}
 		return returnBoolean;
+		
+	}
+	public boolean submitMonitorJob(Campaign campaign) throws SchedulerException{
+		boolean returnBoolean = false;
+		JobDataMap jobDataMap = new JobDataMap();
+		jobDataMap.put(JobType.MONITOR.value, campaign);
+		JobDetail tweetJob = JobBuilder
+					.newJob(CampaignJob.class)
+					.withIdentity(campaign.getCredential().getUserId() + "_" + JobType.MONITOR.value, TWEET_GROUP)
+					.usingJobData(jobDataMap).build();
+
+		Trigger tweetTrigger = TriggerBuilder
+					.newTrigger()
+					.withSchedule(
+							SimpleScheduleBuilder
+									.simpleSchedule()
+									.withIntervalInSeconds(
+											campaign.getIntervalInSeconds())
+									.repeatForever()).build();
+		org.quartz.Scheduler scheduler = schFactory.getScheduler();
+		if (!scheduler.isStarted()) {
+			scheduler.start();
+		}
+		Date dateSchedule = scheduler.scheduleJob(tweetJob, tweetTrigger);
+		if (dateSchedule != null) {
+			returnBoolean = true;
+		}
+		return returnBoolean;
+		
 	}
 
-	public boolean stopJob(Campaign campaign) throws SchedulerException {
+	public boolean stopJob(Campaign campaign, JobType jobType) throws SchedulerException {
 		boolean returnBoolean = false;
 		org.quartz.Scheduler scheduler = schFactory.getScheduler();
 		JobKey campaignJobKey = new JobKey(
-				campaign.getCredential().getUserId(), TWEET_GROUP);
+				campaign.getCredential().getUserId() + "_" + jobType.value, TWEET_GROUP);
 		if (scheduler != null && scheduler.checkExists(campaignJobKey)) {
 			scheduler.deleteJob(campaignJobKey);
 			returnBoolean = true;
@@ -71,5 +100,17 @@ public class Scheduler {
 			returnBoolean = true;
 		}
 		return returnBoolean;
+	}
+	//JobType Enum
+	public enum JobType{
+	    CAMPAIGN("campaign"),
+	    MONITOR("monitor");
+	    private final String value;
+	    private JobType(String value){
+	    	this.value = value;
+	    }
+	    public String getValue(){
+	    	return this.value;
+	    }
 	}
 }
