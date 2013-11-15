@@ -6,7 +6,7 @@ import twitter4j.Twitter;
 
 public class Campaign implements Serializable {
 	/**
-	 * 
+	 * comment
 	 */
 	private static final long serialVersionUID = 4024558909646088878L;
 	private String tweetText;
