@@ -2,9 +2,11 @@ package org.tweet.marketing;
 
 import java.io.Serializable;
 
+import twitter4j.QueryResult;
+import twitter4j.Status;
 import twitter4j.Twitter;
 
-public class Campaign implements Serializable {
+public class Campaign implements Serializable{
 	/**
 	 * 
 	 */
@@ -18,7 +20,11 @@ public class Campaign implements Serializable {
 	private Monitor monitor;
 
 	public String getTweetText() {
-		return tweetText;
+		String campaignText = this.tweetText;
+		if(this.monitor != null && this.monitor.getHashtagToMonitor() != null){
+			campaignText = campaignText + " " + this.monitor.getHashtagToMonitor();
+		}
+		return campaignText;
 	}
 
 	public void setTweetText(String tweetText) {

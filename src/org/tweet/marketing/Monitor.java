@@ -8,6 +8,7 @@ public class Monitor {
 	private String hashtagToMonitor;
 	private QueryResult twitterQueryResult;
 	private int intervalInSeconds;
+	private MonitorCallback monitorCallback;
 
 	public QueryResult getTwitterQueryResult() {
 		return twitterQueryResult;
@@ -47,5 +48,13 @@ public class Monitor {
 
 	public void setCampaignId(int campaignId) {
 		this.campaignId = campaignId;
+	}
+
+	public MonitorCallback getMonitorCallback() {
+		return monitorCallback;
+	}
+
+	public void setMonitorCallback(MonitorCallback monitorCallback) {
+		this.monitorCallback = monitorCallback;
 	}
 }

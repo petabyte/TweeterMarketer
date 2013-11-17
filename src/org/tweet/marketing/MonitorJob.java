@@ -4,19 +4,36 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+import twitter4j.Query;
+import twitter4j.QueryResult;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+
 public class MonitorJob implements Job {
 
-	private Campaign campaign;
+	private Campaign monitor;
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-		// TODO Auto-generated method stub
-		
+		if(monitor.getMonitor() != null && monitor.getTwitter() != null){
+			try {
+			 Monitor monitorCampaign = monitor.getMonitor();
+			 Twitter twitter = monitor.getTwitter();
+			 Query query = new Query(monitorCampaign.getHashtagToMonitor());
+		     QueryResult result = twitter.search(query);
+		     monitorCampaign.setTwitterQueryResult(result);
+		     monitorCampaign.getMonitorCallback().executeCallback();		     
+			} catch (TwitterException e) {
+				throw new JobExecutionException(e);
+			}
+			
+		}
+	
 	}
-	public Campaign getCampaign() {
-		return campaign;
+	public Campaign getMonitor() {
+		return monitor;
 	}
-	public void setCampaign(Campaign campaign) {
-		this.campaign = campaign;
+	public void setMonitor(Campaign monitor) {
+		this.monitor = monitor;
 	}
   
 }

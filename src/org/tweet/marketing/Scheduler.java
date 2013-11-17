@@ -55,24 +55,24 @@ public class Scheduler {
 		boolean returnBoolean = false;
 		JobDataMap jobDataMap = new JobDataMap();
 		jobDataMap.put(JobType.MONITOR.value, campaign);
-		JobDetail tweetJob = JobBuilder
-					.newJob(CampaignJob.class)
+		JobDetail monitorJob = JobBuilder
+					.newJob(MonitorJob.class)
 					.withIdentity(campaign.getCredential().getUserId() + "_" + JobType.MONITOR.value, TWEET_GROUP)
 					.usingJobData(jobDataMap).build();
 
-		Trigger tweetTrigger = TriggerBuilder
+		Trigger monitorTrigger = TriggerBuilder
 					.newTrigger()
 					.withSchedule(
 							SimpleScheduleBuilder
 									.simpleSchedule()
 									.withIntervalInSeconds(
-											campaign.getIntervalInSeconds())
+											campaign.getMonitor().getIntervalInSeconds())
 									.repeatForever()).build();
 		org.quartz.Scheduler scheduler = schFactory.getScheduler();
 		if (!scheduler.isStarted()) {
 			scheduler.start();
 		}
-		Date dateSchedule = scheduler.scheduleJob(tweetJob, tweetTrigger);
+		Date dateSchedule = scheduler.scheduleJob(monitorJob, monitorTrigger);
 		if (dateSchedule != null) {
 			returnBoolean = true;
 		}
