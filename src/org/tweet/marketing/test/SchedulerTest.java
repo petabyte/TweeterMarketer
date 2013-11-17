@@ -14,7 +14,7 @@ import org.tweet.marketing.Campaign;
 import org.tweet.marketing.Credential;
 import org.tweet.marketing.Scheduler;
 import org.tweet.marketing.Scheduler.JobType;
-import org.tweet.marketing.repository.TokenRepositoryDAO;
+import org.tweet.marketing.repository.CredentialRepositoryDAO;
 
 import twitter4j.Paging;
 import twitter4j.Status;
@@ -28,9 +28,9 @@ public class SchedulerTest {
 	Scheduler scheduler;
     @Before
 	public void setUp() throws Exception{
-		TokenRepositoryDAO tokenDao = new TokenRepositoryDAO();
+		CredentialRepositoryDAO tokenDao = new CredentialRepositoryDAO();
 		String userId = "1938854540";
-		Credential credential = tokenDao.getCredential(userId);
+		Credential credential = tokenDao.getCredentialUsingUserId(userId);
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true)
 		  .setOAuthConsumerKey(credential.getConsumerToken().getConsumerKey())

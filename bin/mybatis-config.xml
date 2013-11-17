@@ -13,6 +13,7 @@
     </environment>
   </environments>
   <mappers>
-    <mapper resource="org/tweet/marketing/repository/TokenRepositoryMapper.xml"/>
+    <mapper resource="org/tweet/marketing/repository/CredentialRepositoryMapper.xml"/>
+    <mapper resource="org/tweet/marketing/repository/CampaignRepositoryMapper.xml"/>
   </mappers>
 </configuration>

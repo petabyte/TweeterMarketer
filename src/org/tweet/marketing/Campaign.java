@@ -9,6 +9,8 @@ public class Campaign implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 4024558909646088878L;
+	private int id;
+	private String name;
 	private String tweetText;
 	private Credential credential;
 	private int intervalInSeconds;
@@ -53,5 +55,34 @@ public class Campaign implements Serializable {
 
 	public void setMonitor(Monitor monitor) {
 		this.monitor = monitor;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getHashtag() {
+		if(monitor != null){
+			return monitor.getHashtagToMonitor();
+		}
+	    return "";
+	}
+
+	public void setHashtag(String hashtag) {
+		if(this.monitor != null){
+			this.monitor.setHashtagToMonitor(hashtag);
+		}
 	}
 }

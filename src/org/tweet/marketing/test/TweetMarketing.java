@@ -5,8 +5,7 @@ import java.io.InputStreamReader;
 
 import org.tweet.marketing.ConsumerToken;
 import org.tweet.marketing.Credential;
-import org.tweet.marketing.repository.TokenRepositoryDAO;
-import org.tweet.marketing.repository.TokenRepositoryMapper;
+import org.tweet.marketing.repository.CredentialRepositoryDAO;
 
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -21,8 +20,8 @@ public class TweetMarketing {
 	public static void main(String args[]) throws Exception {
 		// The factory instance is re-useable and thread safe.
 		Twitter twitter = TwitterFactory.getSingleton();
-		TokenRepositoryDAO tokenRepository = new TokenRepositoryDAO();
-		ConsumerToken consumerToken = tokenRepository
+		CredentialRepositoryDAO credentialRepository = new CredentialRepositoryDAO();
+		ConsumerToken consumerToken = credentialRepository
 				.getConsumerToken(TWEETER_PROMO);
 		twitter.setOAuthConsumer(consumerToken.getConsumerKey(),
 				consumerToken.getConsumerSecret());
@@ -54,15 +53,15 @@ public class TweetMarketing {
 		// persist to the accessToken for future reference.
 		org.tweet.marketing.AccessToken accessTokenTweet = new org.tweet.marketing.AccessToken();
 		String userId = Long.toString(accessToken.getUserId());
-		
 		Credential credential = new Credential();
+		credential.setConsumerToken(consumerToken);
 		credential.setUserId(userId);
 		credential.setUserName(TWEETER_PROMO);
 		accessTokenTweet.setUserId(userId);
 		accessTokenTweet.setAccessKey(accessToken.getToken());
 		accessTokenTweet.setAccessSecret(accessToken.getTokenSecret());
-		tokenRepository.insertAccessToken(accessTokenTweet);
-		tokenRepository.insertCredential(credential);
+		credential.setAccessToken(accessTokenTweet);
+		credentialRepository.insertCredential(credential);
 		Status status = twitter.updateStatus(args[0]);
 		System.out.println("Successfully updated the status to ["
 				+ status.getText() + "].");

@@ -11,6 +11,7 @@ public class Credential implements Serializable {
 	private String userName;
 	private AccessToken accessToken;
 	private ConsumerToken consumerToken;
+	private int campaignId;
 
 	public AccessToken getAccessToken() {
 		return accessToken;
@@ -42,5 +43,13 @@ public class Credential implements Serializable {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public int getCampaignId() {
+		return campaignId;
+	}
+
+	public void setCampaignId(int campaignId) {
+		this.campaignId = campaignId;
 	}
 }

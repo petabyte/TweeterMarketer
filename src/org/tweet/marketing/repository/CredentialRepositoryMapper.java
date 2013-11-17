@@ -15,7 +15,7 @@ import org.tweet.marketing.Credential;
  * @author georgesanchez
  *
  */
-public interface TokenRepositoryMapper {
+public interface CredentialRepositoryMapper {
 	/**
 	 * consumerAccessProperties 
 	 */
@@ -30,6 +30,18 @@ public interface TokenRepositoryMapper {
     /*
      *Store the AccessToken in the properties file 
      */
+    @Select("SELECT TW_USER_ID, TW_USER_NAME FROM CREDENTIAL WHERE TW_CAMP_ID = #{campaignId}") 
+    @Results(value = {
+    		@Result(property="userId", column="TW_USER_ID"),
+    		@Result(property="userName", column="TW_USER_NAME"),
+    		@Result(property="accessToken", column="TW_USER_ID", javaType=AccessToken.class,one=@One(select="getAccessToken")),
+    		@Result(property="consumerToken", column="TW_USER_NAME", javaType=ConsumerToken.class,one=@One(select="getConsumerToken"))
+    		})
+	public Credential getCredential(int campaignId) throws Exception;
+    
+    /*
+     *Store the AccessToken in the properties file 
+     */
     @Select("SELECT TW_USER_ID, TW_USER_NAME FROM CREDENTIAL WHERE TW_USER_ID = #{userId}") 
     @Results(value = {
     		@Result(property="userId", column="TW_USER_ID"),
@@ -37,12 +49,12 @@ public interface TokenRepositoryMapper {
     		@Result(property="accessToken", column="TW_USER_ID", javaType=AccessToken.class,one=@One(select="getAccessToken")),
     		@Result(property="consumerToken", column="TW_USER_NAME", javaType=ConsumerToken.class,one=@One(select="getConsumerToken"))
     		})
-	public Credential getCredential(String userId) throws Exception;
+	public Credential getCredentialUsingUserId(String userId) throws Exception;
     
-    @Insert("INSERT INTO CREDENTIAL (TW_USER_ID, TW_USER_NAME) VALUES (#{userId}, #{userName})")
+    @Insert("INSERT INTO CREDENTIAL (TW_USER_ID, TW_USER_NAME, TW_CAMP_ID) VALUES (#{userId}, #{userName},#{campaignId})")
     public int insertCredential(Credential credential) throws Exception;
     
-    @Delete("DELETE FROM CREDENTIAL WHERE TW_USER_ID = #{userId} AND TW_USER_NAME = #{userName}")
+    @Delete("DELETE FROM CREDENTIAL WHERE TW_CAMP_ID = #{campaignId}")
     public int deleteCredential(Credential credential) throws Exception;
     /**
      * 

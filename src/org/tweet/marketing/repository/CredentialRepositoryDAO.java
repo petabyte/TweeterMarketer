@@ -6,10 +6,10 @@ import org.tweet.marketing.AccessToken;
 import org.tweet.marketing.ConsumerToken;
 import org.tweet.marketing.Credential;
 
-public class TokenRepositoryDAO {
+public class CredentialRepositoryDAO {
 	private SqlSessionFactory sqlSessionFactory;
 
-	public TokenRepositoryDAO() {
+	public CredentialRepositoryDAO() {
 		sqlSessionFactory = ConnectionFactory.getSession();
 	}
     /**
@@ -18,13 +18,32 @@ public class TokenRepositoryDAO {
      * @return
      * @throws Exception
      */
-	public Credential getCredential(String userId) throws Exception {
+	public Credential getCredential(int campaignId) throws Exception {
 		SqlSession session = sqlSessionFactory.openSession();
 		try {
 
-			TokenRepositoryMapper mapper = session
-					.getMapper(TokenRepositoryMapper.class);
-			Credential credential = mapper.getCredential(userId);
+			CredentialRepositoryMapper mapper = session
+					.getMapper(CredentialRepositoryMapper.class);
+			Credential credential = mapper.getCredential(campaignId);
+			return credential;
+		} finally {
+			session.close();
+		}
+	}
+	
+    /**
+     * 
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+	public Credential getCredentialUsingUserId(String userId) throws Exception {
+		SqlSession session = sqlSessionFactory.openSession();
+		try {
+
+			CredentialRepositoryMapper mapper = session
+					.getMapper(CredentialRepositoryMapper.class);
+			Credential credential = mapper.getCredentialUsingUserId(userId);
 			return credential;
 		} finally {
 			session.close();
@@ -40,8 +59,14 @@ public class TokenRepositoryDAO {
 		SqlSession session = sqlSessionFactory.openSession(true);
 		try {
 
-			TokenRepositoryMapper mapper = session
-					.getMapper(TokenRepositoryMapper.class);
+			CredentialRepositoryMapper mapper = session
+					.getMapper(CredentialRepositoryMapper.class);
+			if(credential.getConsumerToken() != null){
+				mapper.insertConsumerToken(credential.getConsumerToken());
+			}
+			if(credential.getAccessToken() != null){
+				mapper.insertAccessToken(credential.getAccessToken());
+			}
 			int returnInt = mapper.insertCredential(credential);
 			return returnInt;
 		} finally {
@@ -59,8 +84,14 @@ public class TokenRepositoryDAO {
 		SqlSession session = sqlSessionFactory.openSession(true);
 		try {
 
-			TokenRepositoryMapper mapper = session
-					.getMapper(TokenRepositoryMapper.class);
+			CredentialRepositoryMapper mapper = session
+					.getMapper(CredentialRepositoryMapper.class);
+			if(credential.getConsumerToken() != null){
+				mapper.deleteConsumerToken(credential.getConsumerToken());
+			}
+			if(credential.getAccessToken() != null){
+				mapper.deleteAccessToken(credential.getAccessToken());
+			}
 			int returnInt = mapper.deleteCredential(credential);
 			return returnInt;
 		} finally {
@@ -78,8 +109,8 @@ public class TokenRepositoryDAO {
 		SqlSession session = sqlSessionFactory.openSession();
 		try {
 
-			TokenRepositoryMapper mapper = session
-					.getMapper(TokenRepositoryMapper.class);
+			CredentialRepositoryMapper mapper = session
+					.getMapper(CredentialRepositoryMapper.class);
 			ConsumerToken consumerToken = mapper.getConsumerToken(userName);
 			return consumerToken;
 		} finally {
@@ -98,8 +129,8 @@ public class TokenRepositoryDAO {
 		SqlSession session = sqlSessionFactory.openSession(true);
 		try {
 
-			TokenRepositoryMapper mapper = session
-					.getMapper(TokenRepositoryMapper.class);
+			CredentialRepositoryMapper mapper = session
+					.getMapper(CredentialRepositoryMapper.class);
 			int returnInt = mapper.insertConsumerToken(consumerToken);
 			return returnInt;
 		} finally {
@@ -117,8 +148,8 @@ public class TokenRepositoryDAO {
 		SqlSession session = sqlSessionFactory.openSession(true);
 		try {
 
-			TokenRepositoryMapper mapper = session
-					.getMapper(TokenRepositoryMapper.class);
+			CredentialRepositoryMapper mapper = session
+					.getMapper(CredentialRepositoryMapper.class);
 			int returnInt = mapper.deleteConsumerToken(consumerToken);
 			return returnInt;
 		} finally {
@@ -136,8 +167,8 @@ public class TokenRepositoryDAO {
 		SqlSession session = sqlSessionFactory.openSession(true);
 		try {
 
-			TokenRepositoryMapper mapper = session
-					.getMapper(TokenRepositoryMapper.class);
+			CredentialRepositoryMapper mapper = session
+					.getMapper(CredentialRepositoryMapper.class);
 			int returnInt = mapper.insertAccessToken(accessToken);
 			return returnInt;
 		} finally {
@@ -155,8 +186,8 @@ public class TokenRepositoryDAO {
 		SqlSession session = sqlSessionFactory.openSession(true);
 		try {
 
-			TokenRepositoryMapper mapper = session
-					.getMapper(TokenRepositoryMapper.class);
+			CredentialRepositoryMapper mapper = session
+					.getMapper(CredentialRepositoryMapper.class);
 			int returnInt = mapper.deleteAccessToken(accessToken);
 			return returnInt;
 		} finally {
