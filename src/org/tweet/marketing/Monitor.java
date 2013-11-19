@@ -5,6 +5,7 @@ import twitter4j.QueryResult;
 public class Monitor {
 	private int campaignId;
 	private int monitorId;
+	private long maxId;
 	private String hashtagToMonitor;
 	private QueryResult twitterQueryResult;
 	private int intervalInSeconds;
@@ -56,5 +57,13 @@ public class Monitor {
 
 	public void setMonitorCallback(MonitorCallback monitorCallback) {
 		this.monitorCallback = monitorCallback;
+	}
+
+	public long getMaxId() {
+		return maxId;
+	}
+
+	public void setMaxId(long maxId) {
+		this.maxId = maxId;
 	}
 }

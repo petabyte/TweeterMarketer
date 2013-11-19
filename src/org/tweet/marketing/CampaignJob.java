@@ -1,5 +1,8 @@
 package org.tweet.marketing;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
+
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -14,7 +17,10 @@ public class CampaignJob implements Job {
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		try {
-			StatusUpdate statusUpdate = new StatusUpdate(campaign.getTweetText());
+			//For testing random String
+			SecureRandom random = new SecureRandom();
+	    	String randomString = new BigInteger(130, random).toString(32);
+			StatusUpdate statusUpdate = new StatusUpdate(campaign.getTweetText() + randomString);
 			//TODO Add image here
 			//statusUpdate.setMedia(file);
 			Status status = campaign.getTwitter().updateStatus(statusUpdate);

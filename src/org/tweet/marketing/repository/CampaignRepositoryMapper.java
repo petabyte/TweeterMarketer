@@ -55,19 +55,21 @@ public interface CampaignRepositoryMapper {
       */
      @Select(GET_CAMPAIGN) 
      @Results(value = {
+    		@Result(property="id", column="TW_CAMP_ID"), 
     		@Result(property="name", column="TW_CAMP_NAME"),
      		@Result(property="tweetText", column="TW_CAMP_TEXT"),
      		@Result(property="intervalInSeconds", column="TW_CAMP_INTERVAL"),
      		@Result(property="monitor", column="TW_CAMP_ID", javaType=Monitor.class,one=@One(select="getMonitor"))
      		})
    
- 	public Campaign getCampaign(Campaign campaign) throws Exception;
+ 	public Campaign getCampaign(int id) throws Exception;
      
      /*
       *Get Monitor 
       */
      @Select(GET_ALL_CAMPAIGN) 
      @Results(value = {
+    		@Result(property="id", column="TW_CAMP_ID"), 
     		@Result(property="name", column="TW_CAMP_NAME"),
      		@Result(property="tweetText", column="TW_CAMP_TEXT"),
      		@Result(property="intervalInSeconds", column="TW_CAMP_INTERVAL"),

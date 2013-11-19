@@ -13,6 +13,7 @@ import org.tweet.marketing.ConsumerToken;
 import org.tweet.marketing.Credential;
 import org.tweet.marketing.Monitor;
 import org.tweet.marketing.repository.CampaignRepositoryDAO;
+import org.tweet.marketing.repository.CredentialRepositoryDAO;
 
 public class CampaignRepositoryDAOTest {
     
@@ -90,6 +91,30 @@ public class CampaignRepositoryDAOTest {
 		assertTrue(returnInt > 0);
 		
 	}
+	
+	@Test 
+	public void insertTestCampaignForUI() throws Exception{
+		CredentialRepositoryDAO tokenDao = new CredentialRepositoryDAO();
+		String userId = "1938854540";
+		Credential credential = tokenDao.getCredentialUsingUserId(userId);
+		//Setup Monitor
+		Monitor newMonitor = new Monitor();
+		newMonitor.setHashtagToMonitor("#fakeHashTag");
+		newMonitor.setIntervalInSeconds(4);
+		
+		Campaign newCampaign = new Campaign();
+		newCampaign.setIntervalInSeconds(5);
+		newCampaign.setName("fakeCampaign");
+		newCampaign.setTweetText("This is the tweet Test!");
+		newCampaign.setMonitor(newMonitor);
+		newCampaign.setCredential(credential);
+		
+		tokenDao.deleteCredential(credential);
+		campaignRepository.insertCampaign(newCampaign);
+		
+		
+	}
+	
 	
 	@Test
 	public void testStoreCampaign() throws Exception{

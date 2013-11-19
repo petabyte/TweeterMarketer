@@ -22,14 +22,14 @@ public class CampaignRepositoryDAO {
      * @return
      * @throws Exception
      */
-	public Campaign getCampaign(Campaign campaign) throws Exception {
-		SqlSession session = sqlSessionFactory.openSession();
+	public Campaign getCampaign(int id) throws Exception {
+		SqlSession session = sqlSessionFactory.openSession(true);
 		try {
 
 			CampaignRepositoryMapper mapper = session
 					.getMapper(CampaignRepositoryMapper.class);
-			Campaign returnCampaign = mapper.getCampaign(campaign);
-			Credential credential = credentialRepository.getCredential(returnCampaign.getId());
+			Campaign returnCampaign = mapper.getCampaign(id);
+			Credential credential = credentialRepository.getCredential(id);
 			if (credential != null){
 				returnCampaign.setCredential(credential);
 			}
@@ -46,7 +46,7 @@ public class CampaignRepositoryDAO {
      * @throws Exception
      */
 	public List<Campaign> getAllCampaign() throws Exception {
-		SqlSession session = sqlSessionFactory.openSession();
+		SqlSession session = sqlSessionFactory.openSession(true);
 		try {
 
 			CampaignRepositoryMapper mapper = session
@@ -71,9 +71,11 @@ public class CampaignRepositoryDAO {
 			CampaignRepositoryMapper mapper = session .getMapper(CampaignRepositoryMapper.class);
 			int returnInt = mapper.insertCampaign(campaign);
 			if(campaign.getMonitor() != null && returnInt > 0){
+				campaign.getMonitor().setCampaignId(campaign.getId());
 				mapper.insertMonitor(campaign.getMonitor());
 			}
 			if(campaign.getCredential() != null && returnInt > 0){
+				campaign.getCredential().setCampaignId(campaign.getId());
 				credentialRepository.insertCredential(campaign.getCredential());
 			}
 			return campaign;

@@ -19,7 +19,7 @@ public class CredentialRepositoryDAO {
      * @throws Exception
      */
 	public Credential getCredential(int campaignId) throws Exception {
-		SqlSession session = sqlSessionFactory.openSession();
+		SqlSession session = sqlSessionFactory.openSession(true);
 		try {
 
 			CredentialRepositoryMapper mapper = session
@@ -38,7 +38,7 @@ public class CredentialRepositoryDAO {
      * @throws Exception
      */
 	public Credential getCredentialUsingUserId(String userId) throws Exception {
-		SqlSession session = sqlSessionFactory.openSession();
+		SqlSession session = sqlSessionFactory.openSession(true);
 		try {
 
 			CredentialRepositoryMapper mapper = session
@@ -106,7 +106,7 @@ public class CredentialRepositoryDAO {
      * @throws Exception
      */
 	public ConsumerToken getConsumerToken(String userName) throws Exception {
-		SqlSession session = sqlSessionFactory.openSession();
+		SqlSession session = sqlSessionFactory.openSession(true);
 		try {
 
 			CredentialRepositoryMapper mapper = session

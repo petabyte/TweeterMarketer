@@ -19,7 +19,9 @@ public class MonitorJob implements Job {
 			 Monitor monitorCampaign = monitor.getMonitor();
 			 Twitter twitter = monitor.getTwitter();
 			 Query query = new Query(monitorCampaign.getHashtagToMonitor());
+			 query.setSinceId(monitorCampaign.getMaxId());
 		     QueryResult result = twitter.search(query);
+		     monitorCampaign.setMaxId(result.getMaxId());
 		     monitorCampaign.setTwitterQueryResult(result);
 		     monitorCampaign.getMonitorCallback().executeCallback();		     
 			} catch (TwitterException e) {
