@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Sun Nov 24 02:22:52 CST 2013
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=TweeterMarketer_fat.jar
+manifest.mergeall=true
+manifest.mainclass=org.tweet.marketing.view.TweeterMarketerApp
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=
+includes=
