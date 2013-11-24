@@ -61,9 +61,9 @@ public class CredentialRepositoryDAO {
 
 			CredentialRepositoryMapper mapper = session
 					.getMapper(CredentialRepositoryMapper.class);
-			if(credential.getConsumerToken() != null){
-				mapper.insertConsumerToken(credential.getConsumerToken());
-			}
+//			if(credential.getConsumerToken() != null){
+//				mapper.insertConsumerToken(credential.getConsumerToken());
+//			}
 			if(credential.getAccessToken() != null){
 				mapper.insertAccessToken(credential.getAccessToken());
 			}
@@ -86,9 +86,9 @@ public class CredentialRepositoryDAO {
 
 			CredentialRepositoryMapper mapper = session
 					.getMapper(CredentialRepositoryMapper.class);
-			if(credential.getConsumerToken() != null){
-				mapper.deleteConsumerToken(credential.getConsumerToken());
-			}
+//			if(credential.getConsumerToken() != null){
+//				mapper.deleteConsumerToken(credential.getConsumerToken());
+//			}
 			if(credential.getAccessToken() != null){
 				mapper.deleteAccessToken(credential.getAccessToken());
 			}

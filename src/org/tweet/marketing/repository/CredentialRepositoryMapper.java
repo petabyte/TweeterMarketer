@@ -20,9 +20,9 @@ public interface CredentialRepositoryMapper {
 	 * consumerAccessProperties 
 	 */
      String GET_ACCESS_TOKEN = "SELECT * FROM ACCESS_TOKEN WHERE TW_USER_ID = #{userId}";
-     String INSERT_ACCESS_TOKEN = "INSERT INTO ACCESS_TOKEN (TW_USER_ID, TW_ACCESS_KEY, TW_ACCESS_SECRET) VALUES (#{userId},#{accessKey},#{accessSecret})";
+     String INSERT_ACCESS_TOKEN = "INSERT INTO ACCESS_TOKEN (TW_USER_ID, TW_ACCESS_KEY, TW_ACCESS_SECRET, TW_USER_NAME) VALUES (#{userId},#{accessKey},#{accessSecret},#{userName})";
      String DELETE_ACCESS_TOKEN = "DELETE FROM ACCESS_TOKEN WHERE TW_USER_ID = #{userId}";
-     String GET_CONSUMER_TOKEN ="SELECT * FROM CONSUMER_TOKEN WHERE TW_USER_NAME = #{userName}";
+     String GET_CONSUMER_TOKEN ="SELECT * FROM CONSUMER_TOKEN WHERE TW_USER_NAME = 'Tweeter_Promo'";
      String INSERT_CONSUMER_TOKEN = "INSERT INTO CONSUMER_TOKEN (TW_USER_NAME, TW_CONSUMER_KEY, TW_CONSUMER_SECRET) VALUES (#{userName}, #{consumerKey},#{consumerSecret})";
      String DELETE_CONSUMER_TOKEN = "DELETE FROM CONSUMER_TOKEN WHERE TW_USER_NAME = #{userName}";
      
@@ -85,6 +85,7 @@ public interface CredentialRepositoryMapper {
     		@Result(property="userId", column="TW_USER_ID"),
     		@Result(property="accessKey", column="TW_ACCESS_KEY"),
     		@Result(property="accessSecret", column="TW_ACCESS_SECRET"),
+    		@Result(property="userName", column="TW_USER_NAME")
     		})
 	public AccessToken getAccessToken(String userId);
     

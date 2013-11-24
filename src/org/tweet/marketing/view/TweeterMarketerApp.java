@@ -1,9 +1,15 @@
 package org.tweet.marketing.view;
 
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import org.tweet.marketing.Campaign;
@@ -16,19 +22,12 @@ import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
-import javax.swing.JButton;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import java.awt.Font;
-
 public class TweeterMarketerApp {
 
 	private JFrame frame;
 	private CampaignController campaignController;
 	private Campaign campaign;
+	private AddUserView addUserView;
 
 	/**
 	 * Launch the application.
@@ -80,27 +79,29 @@ public class TweeterMarketerApp {
 		
 		try {
 			campaign = campaignController.getCampaign(campaignController.getListOfCampaigns().get(0).getId());
-			ConfigurationBuilder cb = new ConfigurationBuilder();
-			cb.setDebugEnabled(true)
-			  .setOAuthConsumerKey(campaign.getCredential().getConsumerToken().getConsumerKey())
-			  .setOAuthConsumerSecret(campaign.getCredential().getConsumerToken().getConsumerSecret())
-			  .setOAuthAccessToken(campaign.getCredential().getAccessToken().getAccessKey())
-			  .setOAuthAccessTokenSecret(campaign.getCredential().getAccessToken().getAccessSecret());
-			   TwitterFactory tf = new TwitterFactory(cb.build());
-			   Twitter twitter = tf.getInstance();
-			   campaign.setTwitter(twitter);
-			   campaign.getMonitor().setMonitorCallback(new MonitorCallback() {
-				
-				@Override
-				public void executeCallback() {
-					QueryResult queryResult  = campaign.getMonitor().getTwitterQueryResult();
-					for (Status status : queryResult.getTweets()) {
-						textArea.append( status.getCreatedAt() + ": @" + status.getUser().getScreenName() + ":" + status.getText() + "\n");
-				    }
+			if(campaign.getCredential() != null){
+				ConfigurationBuilder cb = new ConfigurationBuilder();
+				cb.setDebugEnabled(true)
+				  .setOAuthConsumerKey(campaign.getCredential().getConsumerToken().getConsumerKey())
+				  .setOAuthConsumerSecret(campaign.getCredential().getConsumerToken().getConsumerSecret())
+				  .setOAuthAccessToken(campaign.getCredential().getAccessToken().getAccessKey())
+				  .setOAuthAccessTokenSecret(campaign.getCredential().getAccessToken().getAccessSecret());
+				   TwitterFactory tf = new TwitterFactory(cb.build());
+				   Twitter twitter = tf.getInstance();
+				   campaign.setTwitter(twitter);
+				   campaign.getMonitor().setMonitorCallback(new MonitorCallback() {
 					
-					
-				}
-			});
+					@Override
+					public void executeCallback() {
+						QueryResult queryResult  = campaign.getMonitor().getTwitterQueryResult();
+						for (Status status : queryResult.getTweets()) {
+							textArea.append( status.getCreatedAt() + ": @" + status.getUser().getScreenName() + ":" + status.getText() + "\n");
+					    }
+						
+						
+					}
+				});
+			}
 		} catch (Exception e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
@@ -161,6 +162,23 @@ public class TweeterMarketerApp {
 		});
 		btnStopTweeting.setBounds(21, 269, 146, 26);
 		frame.getContentPane().add(btnStopTweeting);
+		
+		JButton btnNewButton_1 = new JButton("New button");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					addUserView = new AddUserView(17);
+					addUserView.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					addUserView.setVisible(true);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			
+			}
+		});
+		btnNewButton_1.setBounds(21, 179, 146, 29);
+		frame.getContentPane().add(btnNewButton_1);
 	
 		
 	

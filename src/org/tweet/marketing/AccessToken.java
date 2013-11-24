@@ -7,6 +7,7 @@ public class AccessToken implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 9212288257793262747L;
+    private String userName;
 	private String userId;
 	private String accessKey;
 	private String accessSecret;
@@ -33,6 +34,14 @@ public class AccessToken implements Serializable {
 
 	public void setAccessSecret(String accessSecret) {
 		this.accessSecret = accessSecret;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 }
