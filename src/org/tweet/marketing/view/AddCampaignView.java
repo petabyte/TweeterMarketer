@@ -13,6 +13,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import org.tweet.marketing.Campaign;
+import org.tweet.marketing.Monitor;
 import org.tweet.marketing.view.controller.CampaignController;
 
 import javax.swing.JScrollPane;
@@ -102,6 +103,11 @@ public class AddCampaignView implements ActionListener {
 			newCampaign.setName(campaignName.getText());
 			newCampaign.setTweetText(campaignMessage.getText());
 			newCampaign.setIntervalInSeconds(Integer.parseInt(campaignInterval.getText()));
+			
+			Monitor monitor = new Monitor();
+			monitor.setHashtagToMonitor("#temporaryHashTag"); // add hashtag input field
+			monitor.setIntervalInSeconds(3);
+			newCampaign.setMonitor(monitor);			
 			
 			campaignName.setText("");
 			campaignMessage.setText("");
