@@ -38,4 +38,8 @@ public class CampaignController {
    public void stopCampaignJob (Campaign campaign) throws Exception{
 	   scheduler.stopJob(campaign, JobType.CAMPAIGN);
    }
+
+	public Campaign addCampaign(Campaign campaign) throws Exception {
+		return campaignRepository.insertCampaign(campaign);
+	}
 }

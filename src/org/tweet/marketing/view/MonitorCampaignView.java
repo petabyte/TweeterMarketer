@@ -1,69 +1,193 @@
 package org.tweet.marketing.view;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Toolkit;
+import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
+import org.tweet.marketing.Campaign;
+import org.tweet.marketing.MonitorCallback;
+import org.tweet.marketing.view.controller.CampaignController;
+
+import twitter4j.QueryResult;
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterFactory;
+import twitter4j.conf.ConfigurationBuilder;
+
 import javax.swing.SwingConstants;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 
-public class MonitorCampaignView implements ActionListener {
-	
-	private static String submitButtonID = "submitID";
+public class MonitorCampaignView implements CaretListener {
+
+	// private JFrame frame;
 	private JPanel viewPanel;
-	private JTextField campaignIdText;
-	private JTextField monitorInfoText;
-	
-	public MonitorCampaignView () {
-		viewPanel = new JPanel(new GridLayout(3,2,30,30));
-		
-		JLabel label = new JLabel("Campaign ID", SwingConstants.RIGHT);
-		viewPanel.add(label);
-		campaignIdText = new JTextField(20);
-		campaignIdText.setText("enter ID here");
-		campaignIdText.addActionListener(this);
-		viewPanel.add(campaignIdText);
-		
-		label = new JLabel("", SwingConstants.RIGHT);
-		viewPanel.add(label);
-		monitorInfoText = new JTextField(20);
-		monitorInfoText.setText("monitoring statistics will go here");
-		monitorInfoText.addActionListener(this);
-		viewPanel.add(monitorInfoText);		
+	private CampaignController campaignController;
+	private Campaign campaign;
+	private JTextArea monitorTextArea;
+	private JTextArea campaignIdTextArea;
 
-		label = new JLabel("", SwingConstants.RIGHT);
-		viewPanel.add(label);
-		JButton submitButton = new JButton("Submit");
-		submitButton.setActionCommand(submitButtonID);
-		submitButton.addActionListener(this);
-		viewPanel.add(submitButton);		
+	public MonitorCampaignView(CampaignController controller) {
+		try {
+			initialize(controller);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	JPanel getViewPanel() {
 		return viewPanel;
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		System.out.println(e.getActionCommand());
-		if (submitButtonID.equals(e.getActionCommand())) {
-			Toolkit.getDefaultToolkit().beep();
-			// grab the campaign ID text and validate it (make sure a corresponding campaign exists)
-			// check the state of the campaign
-			// if the campaign is not running then notify the user
-			// if the campaign is running then start presenting statistics:
-			//  - get events from domain 
-			//  - fetch info from events or domain objects
-			//  - enter info into display area
+	private void initialize(CampaignController controller) throws Exception {
+		campaignController = controller;
+	
+		viewPanel = new JPanel();
+		viewPanel.setBounds(100, 100, 655, 426);
+		viewPanel.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Monitor Tweets:");
+		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 12));
+		lblNewLabel.setBounds(216, 6, 102, 16);
+		viewPanel.add(lblNewLabel);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(218, 28, 409, 370);
+		viewPanel.add(scrollPane);
+		
+		monitorTextArea = new JTextArea();
+		monitorTextArea.setFont(new Font("Dialog", Font.PLAIN, 12));
+		monitorTextArea.setEditable(false);
+		scrollPane.setViewportView(monitorTextArea);
+		
+		JLabel lblNewLabel_1 = new JLabel("Pick a campaign id:");
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_1.setFont(new Font("Dialog", Font.BOLD, 14));
+		lblNewLabel_1.setBounds(21, 28, 146, 26);
+		viewPanel.add(lblNewLabel_1);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(21, 52, 146, 175);
+		viewPanel.add(scrollPane_1);		
+		
+		campaignIdTextArea = new JTextArea();
+		campaignIdTextArea.setBounds(21, 52, 144, 175);
+		campaignIdTextArea.setFont(new Font("Dialog", Font.PLAIN, 12));
+		campaignIdTextArea.setEditable(false);
+		scrollPane_1.setViewportView(campaignIdTextArea);
+		
+		List<Campaign> campaigns = campaignController.getListOfCampaigns();
+		Iterator<Campaign> itr = campaigns.iterator();
+		while(itr.hasNext()) {
+			campaignIdTextArea.append(String.valueOf(itr.next().getId()) + "\n");
 		}
+		campaignIdTextArea.addCaretListener(this);
+		
+		JButton btnNewButton = new JButton("Start Monitoring");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					campaignController.submitMonitoringJob(campaign);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		btnNewButton.setBounds(21, 329, 146, 29);
+		viewPanel.add(btnNewButton);
+		
+		JButton btnStopMonitoring = new JButton("Stop Monitoring");
+		btnStopMonitoring.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					campaignController.stopMonitoringJob(campaign);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		btnStopMonitoring.setBounds(21, 369, 146, 29);
+		viewPanel.add(btnStopMonitoring);
+		
+		JButton btnStartTweeting = new JButton("Start Tweeting");
+		btnStartTweeting.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					campaignController.submitCampaignJob(campaign);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		btnStartTweeting.setBounds(21, 252, 146, 29);
+		viewPanel.add(btnStartTweeting);
+		
+		JButton btnStopTweeting = new JButton("Stop Tweeting");
+		btnStopTweeting.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					campaignController.stopCampaignJob(campaign);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		btnStopTweeting.setBounds(21, 292, 146, 26);
+		viewPanel.add(btnStopTweeting);
 	}
 
+	@Override
+	public void caretUpdate(CaretEvent arg0) {
+		try {
+			String campaignIdString = campaignIdTextArea.getSelectedText();
+			int campaignId = 17; //default predefined campaign
+			if (campaignIdString != null) {
+				campaignId = Integer.parseInt(campaignIdString);
+			}
+			campaign = campaignController.getCampaign(campaignId);
+			
+			if(campaign.getCredential() != null) {
+				ConfigurationBuilder cb = new ConfigurationBuilder();
+				cb.setDebugEnabled(true)
+				  .setOAuthConsumerKey(campaign.getCredential().getConsumerToken().getConsumerKey())
+				  .setOAuthConsumerSecret(campaign.getCredential().getConsumerToken().getConsumerSecret())
+				  .setOAuthAccessToken(campaign.getCredential().getAccessToken().getAccessKey())
+				  .setOAuthAccessTokenSecret(campaign.getCredential().getAccessToken().getAccessSecret());
+				   TwitterFactory tf = new TwitterFactory(cb.build());
+				   Twitter twitter = tf.getInstance();
+				   campaign.setTwitter(twitter);
+				   campaign.getMonitor().setMonitorCallback(new MonitorCallback() {
+					
+					@Override
+					public void executeCallback() {
+						QueryResult queryResult  = campaign.getMonitor().getTwitterQueryResult();
+						for (Status status : queryResult.getTweets()) {
+							monitorTextArea.append( status.getCreatedAt() + ": @" + status.getUser().getScreenName() + ":" + status.getText() + "\n");
+					    }
+						
+						
+					}
+				});
+			}
+		} catch (Exception e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+	}
 }

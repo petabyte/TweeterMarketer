@@ -13,21 +13,21 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
+import java.awt.GridLayout;
+import java.awt.FlowLayout;
+
+import javax.swing.BoxLayout;
+
+import org.tweet.marketing.view.controller.CampaignController;
+
 public class TweeterMarketerView implements ActionListener {
 	private Container contentPane;
-	
-	private static String addViewID = "addCampaignView";
-	private static String editViewID = "editCampaignView";
-	private static String removeViewID = "removeCampaignView";
-	private static String runViewID = "runCampaignView";
-	private static String monitorViewID = "monitorCampaignView";
-	private static String stopViewID = "stopCampaignView";
+
+	private static String addCampaignID = "addCampaignView";
+	private static String monitorCampaignID = "monitorCampaignView";
+	private CampaignController campaignController;
 	
 	public static void main(String args[]) {
-		// high level builder stuff can go here:
-		//  - construct a domain controller
-		//  - construct views and connect to controller
-
 		new TweeterMarketerView();
 	}
 	
@@ -36,13 +36,14 @@ public class TweeterMarketerView implements ActionListener {
 	public TweeterMarketerView() {
 		
 		JFrame frame = new JFrame("Tweeter Marketer");
+		
 		frame.setSize(800, 550); 
 		
-		contentPane = frame.getContentPane();
-		
+		campaignController = new CampaignController();
 		JToolBar toolbar = buildToolBar();
 		subViews = buildSubViews();
 
+		contentPane = frame.getContentPane();
 		contentPane.add(toolbar, BorderLayout.PAGE_START);
 		contentPane.add(subViews, BorderLayout.CENTER);
 		
@@ -57,28 +58,13 @@ public class TweeterMarketerView implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		System.out.println(e.getActionCommand());
-		Toolkit.getDefaultToolkit().beep();
-
 		CardLayout cl = (CardLayout) (subViews.getLayout());
 		switch (e.getActionCommand()) {
-		case "add":
-			cl.show(subViews, addViewID);
+		case "addCampaign":
+			cl.show(subViews, addCampaignID);
 			break;
-		case "edit":
-			cl.show(subViews, editViewID);
-			break;
-		case "remove":
-			cl.show(subViews, removeViewID);
-			break;
-		case "run":
-			cl.show(subViews, runViewID);
-			break;
-		case "monitor":
-			cl.show(subViews, monitorViewID);
-			break;
-		case "stop":
-			cl.show(subViews, stopViewID);
+		case "monitorCampaign":
+			cl.show(subViews, monitorCampaignID);
 			break;
 		default:
 			break;
@@ -86,37 +72,17 @@ public class TweeterMarketerView implements ActionListener {
 	}
 
 	private JToolBar buildToolBar() {
-		JButton addButton = new JButton("Add a Campaign");
-		addButton.setActionCommand("add");
-		addButton.addActionListener(this);
-
-		JButton editButton = new JButton("TBD: Edit Campaign");
-		editButton.setActionCommand("edit");
-		editButton.addActionListener(this);
-
-		JButton removeButton = new JButton("TBD: Remove Campaign");
-		removeButton.setActionCommand("remove");
-		removeButton.addActionListener(this);
+		JButton addCampaignButton = new JButton("Add Campaign");
+		addCampaignButton.setActionCommand("addCampaign");
+		addCampaignButton.addActionListener(this);
 		
-		JButton runButton = new JButton("Run a Campaign");
-		runButton.setActionCommand("run");
-		runButton.addActionListener(this);
-		
-		JButton monitorButton = new JButton("Monitor a Campaign");
-		monitorButton.setActionCommand("monitor");
+		JButton monitorButton = new JButton("Monitor Campaign");
+		monitorButton.setActionCommand("monitorCampaign");
 		monitorButton.addActionListener(this);
 
-		JButton stopButton = new JButton("TBD: Stop Campaign");
-		stopButton.setActionCommand("stop");
-		stopButton.addActionListener(this);
-
 		JToolBar toolbar = new JToolBar();
-		toolbar.add(addButton);
-		toolbar.add(editButton);
-		toolbar.add(removeButton);
-		toolbar.add(runButton);
+		toolbar.add(addCampaignButton);
 		toolbar.add(monitorButton);
-		toolbar.add(stopButton);
 		
 		toolbar.setAlignmentX(0);
 		toolbar.setAlignmentY(0);
@@ -124,45 +90,23 @@ public class TweeterMarketerView implements ActionListener {
 		return toolbar;
 	}
 
-	private JPanel buildAddView() {
-		AddCampaignView addView = new AddCampaignView();
-		return addView.getViewPanel();
-	}
 
-	private JPanel buildRunView() {
-		RunCampaignView runView = new RunCampaignView();
-		return runView.getViewPanel();
+	private JPanel buildAddCampaignView() {
+		AddCampaignView addCampaignView = new AddCampaignView(campaignController);
+		return addCampaignView.getViewPanel();
 	}
 	
-	private JPanel buildMonitorView() {
-		MonitorCampaignView monitorView = new MonitorCampaignView();
+	private JPanel buildMonitorCampaignView() {
+		MonitorCampaignView monitorView = new MonitorCampaignView(campaignController);
 		return monitorView.getViewPanel();
 	}
 
 	
 	private JPanel buildSubViews() {
-		JPanel subViews = new JPanel(new CardLayout());
+		JPanel subViews = new JPanel(new CardLayout(0,0));
 		
-		subViews.add(buildAddView(), addViewID);
-		subViews.add(buildRunView(), runViewID);		
-		subViews.add(buildMonitorView(), monitorViewID);
-
-		// the rest can go away if we don't want them:
-		
-		JPanel editCard = new JPanel();
-		JButton buttonView = new JButton("edit campaign view placeholder");
-		editCard.add(buttonView);
-		subViews.add(editCard, editViewID);		
-		
-		JPanel removeCard = new JPanel();
-		buttonView = new JButton("remove campaign view placeholder");
-		removeCard.add(buttonView);
-		subViews.add(removeCard, removeViewID);
-		
-		JPanel stopCard = new JPanel();
-		buttonView = new JButton("stop campaign view placeholder");
-		stopCard.add(buttonView);
-		subViews.add(stopCard, stopViewID);
+		subViews.add(buildAddCampaignView(), addCampaignID);		
+		subViews.add(buildMonitorCampaignView(), monitorCampaignID);
 		
 		return subViews;	
 	}
