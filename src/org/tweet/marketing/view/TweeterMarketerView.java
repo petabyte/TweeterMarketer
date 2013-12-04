@@ -23,6 +23,8 @@ import org.tweet.marketing.view.controller.CampaignController;
 public class TweeterMarketerView implements ActionListener {
 	private Container contentPane;
 
+	private AddCampaignView addCampaignView;
+	private MonitorCampaignView monitorCampaignView;
 	private static String addCampaignID = "addCampaignView";
 	private static String monitorCampaignID = "monitorCampaignView";
 	private CampaignController campaignController;
@@ -41,7 +43,7 @@ public class TweeterMarketerView implements ActionListener {
 		
 		campaignController = new CampaignController();
 		JToolBar toolbar = buildToolBar();
-		subViews = buildSubViews();
+		buildSubViews();
 
 		contentPane = frame.getContentPane();
 		contentPane.add(toolbar, BorderLayout.PAGE_START);
@@ -64,6 +66,7 @@ public class TweeterMarketerView implements ActionListener {
 			cl.show(subViews, addCampaignID);
 			break;
 		case "monitorCampaign":
+			monitorCampaignView.updateCampaignList();
 			cl.show(subViews, monitorCampaignID);
 			break;
 		default:
@@ -89,26 +92,21 @@ public class TweeterMarketerView implements ActionListener {
 		
 		return toolbar;
 	}
-
-
-	private JPanel buildAddCampaignView() {
-		AddCampaignView addCampaignView = new AddCampaignView(campaignController);
-		return addCampaignView.getViewPanel();
+	
+	private void clearSubViews() {
+		CardLayout cl = (CardLayout) (subViews.getLayout());
+		cl.removeLayoutComponent(addCampaignView.getViewPanel());
+		cl.removeLayoutComponent(monitorCampaignView.getViewPanel());
 	}
 	
-	private JPanel buildMonitorCampaignView() {
-		MonitorCampaignView monitorView = new MonitorCampaignView(campaignController);
-		return monitorView.getViewPanel();
-	}
-
-	
-	private JPanel buildSubViews() {
-		JPanel subViews = new JPanel(new CardLayout(0,0));
+	private void buildSubViews() {
+		subViews = new JPanel(new CardLayout(0,0));
 		
-		subViews.add(buildAddCampaignView(), addCampaignID);		
-		subViews.add(buildMonitorCampaignView(), monitorCampaignID);
+		addCampaignView = new AddCampaignView(campaignController);
+		subViews.add(addCampaignView.getViewPanel(), addCampaignID);
 		
-		return subViews;	
+		monitorCampaignView = new MonitorCampaignView(campaignController);
+		subViews.add(monitorCampaignView.getViewPanel(), monitorCampaignID);
 	}
 
 }

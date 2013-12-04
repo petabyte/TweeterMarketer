@@ -88,11 +88,7 @@ public class MonitorCampaignView implements CaretListener {
 		campaignIdTextArea.setEditable(false);
 		scrollPane_1.setViewportView(campaignIdTextArea);
 		
-		List<Campaign> campaigns = campaignController.getListOfCampaigns();
-		Iterator<Campaign> itr = campaigns.iterator();
-		while(itr.hasNext()) {
-			campaignIdTextArea.append(String.valueOf(itr.next().getId()) + "\n");
-		}
+		updateCampaignList();
 		campaignIdTextArea.addCaretListener(this);
 		
 		JButton btnNewButton = new JButton("Start Monitoring");
@@ -188,6 +184,20 @@ public class MonitorCampaignView implements CaretListener {
 		} catch (Exception e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
+		}
+	}
+
+	public void updateCampaignList() {
+		List<Campaign> campaigns = null;
+		try {
+			campaigns = campaignController.getListOfCampaigns();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Iterator<Campaign> itr = campaigns.iterator();
+		campaignIdTextArea.setText("");
+		while(itr.hasNext()) {
+			campaignIdTextArea.append(String.valueOf(itr.next().getId()) + "\n");
 		}
 	}
 }
