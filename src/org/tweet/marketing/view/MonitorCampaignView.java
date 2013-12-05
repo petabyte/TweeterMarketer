@@ -1,20 +1,19 @@
 package org.tweet.marketing.view;
 
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 
 import org.tweet.marketing.Campaign;
 import org.tweet.marketing.MonitorCallback;
@@ -25,10 +24,6 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
-
-import javax.swing.SwingConstants;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
 
 public class MonitorCampaignView implements CaretListener {
 
@@ -55,7 +50,7 @@ public class MonitorCampaignView implements CaretListener {
 		campaignController = controller;
 	
 		viewPanel = new JPanel();
-		viewPanel.setBounds(100, 100, 655, 426);
+		viewPanel.setBounds(100, 100, 800, 497);
 		viewPanel.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Monitor Tweets:");
@@ -64,7 +59,7 @@ public class MonitorCampaignView implements CaretListener {
 		viewPanel.add(lblNewLabel);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(218, 28, 409, 370);
+		scrollPane.setBounds(218, 28, 576, 463);
 		viewPanel.add(scrollPane);
 		
 		monitorTextArea = new JTextArea();

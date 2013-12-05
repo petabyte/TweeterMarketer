@@ -1,7 +1,5 @@
 package org.tweet.marketing.view;
 
-import java.awt.GridLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,14 +13,6 @@ import javax.swing.SwingConstants;
 import org.tweet.marketing.Campaign;
 import org.tweet.marketing.Monitor;
 import org.tweet.marketing.view.controller.CampaignController;
-
-import javax.swing.JScrollPane;
-
-import java.awt.Font;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.swing.JTextArea;
 
 public class AddCampaignView implements ActionListener {
 	
@@ -119,7 +109,8 @@ public class AddCampaignView implements ActionListener {
 			
 			Monitor monitor = new Monitor();
 			monitor.setHashtagToMonitor(hashtagTextField.getText());
-			monitor.setIntervalInSeconds(newCampaign.getIntervalInSeconds());
+			int monitorInterval = newCampaign.getIntervalInSeconds() - 1 < 0 ? 1 : newCampaign.getIntervalInSeconds() - 1;  
+			monitor.setIntervalInSeconds(monitorInterval);
 			newCampaign.setMonitor(monitor);			
 			
 			campaignName.setText("");

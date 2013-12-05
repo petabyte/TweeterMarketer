@@ -2,8 +2,6 @@ package org.tweet.marketing;
 
 import java.io.Serializable;
 
-import twitter4j.QueryResult;
-import twitter4j.Status;
 import twitter4j.Twitter;
 
 public class Campaign implements Serializable{

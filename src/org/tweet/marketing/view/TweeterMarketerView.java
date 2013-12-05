@@ -13,11 +13,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
-import java.awt.GridLayout;
-import java.awt.FlowLayout;
-
-import javax.swing.BoxLayout;
-
 import org.tweet.marketing.view.controller.CampaignController;
 
 public class TweeterMarketerView implements ActionListener {
