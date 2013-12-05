@@ -7,7 +7,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -25,14 +27,13 @@ import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
-public class MonitorCampaignView implements CaretListener {
+public class MonitorCampaignView implements ActionListener {
 
-	// private JFrame frame;
 	private JPanel viewPanel;
 	private CampaignController campaignController;
 	private Campaign campaign;
 	private JTextArea monitorTextArea;
-	private JTextArea campaignIdTextArea;
+	private JComboBox campaignIdsComboBox;
 
 	public MonitorCampaignView(CampaignController controller) {
 		try {
@@ -70,25 +71,13 @@ public class MonitorCampaignView implements CaretListener {
 		JLabel lblNewLabel_1 = new JLabel("Pick a campaign id:");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setFont(new Font("Dialog", Font.BOLD, 14));
-		lblNewLabel_1.setBounds(21, 28, 146, 26);
+		lblNewLabel_1.setBounds(21, 62, 146, 26);
 		viewPanel.add(lblNewLabel_1);
-		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(21, 52, 146, 175);
-		viewPanel.add(scrollPane_1);		
-		
-		campaignIdTextArea = new JTextArea();
-		campaignIdTextArea.setBounds(21, 52, 144, 175);
-		campaignIdTextArea.setFont(new Font("Dialog", Font.PLAIN, 12));
-		campaignIdTextArea.setEditable(false);
-		scrollPane_1.setViewportView(campaignIdTextArea);
-		
-		updateCampaignList();
-		campaignIdTextArea.addCaretListener(this);
 		
 		JButton btnNewButton = new JButton("Start Monitoring");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(viewPanel, "Starting to monitor the campaign...");
 				try {
 					campaignController.submitMonitoringJob(campaign);
 				} catch (Exception e1) {
@@ -103,6 +92,7 @@ public class MonitorCampaignView implements CaretListener {
 		JButton btnStopMonitoring = new JButton("Stop Monitoring");
 		btnStopMonitoring.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(viewPanel, "No longer monitoring the campaign...");
 				try {
 					campaignController.stopMonitoringJob(campaign);
 				} catch (Exception e1) {
@@ -117,6 +107,7 @@ public class MonitorCampaignView implements CaretListener {
 		JButton btnStartTweeting = new JButton("Start Tweeting");
 		btnStartTweeting.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(viewPanel, "Starting the campaign...");
 				try {
 					campaignController.submitCampaignJob(campaign);
 				} catch (Exception e1) {
@@ -131,6 +122,7 @@ public class MonitorCampaignView implements CaretListener {
 		JButton btnStopTweeting = new JButton("Stop Tweeting");
 		btnStopTweeting.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(viewPanel, "Stopping the campaign...");				
 				try {
 					campaignController.stopCampaignJob(campaign);
 				} catch (Exception e1) {
@@ -141,16 +133,18 @@ public class MonitorCampaignView implements CaretListener {
 		});
 		btnStopTweeting.setBounds(21, 292, 146, 26);
 		viewPanel.add(btnStopTweeting);
+		
+		campaignIdsComboBox = new JComboBox();
+		campaignIdsComboBox.setBounds(21, 96, 146, 29);
+		updateCampaignList();
+		campaignIdsComboBox.addActionListener(this);
+		viewPanel.add(campaignIdsComboBox);
 	}
-
-	@Override
-	public void caretUpdate(CaretEvent arg0) {
-		try {
-			String campaignIdString = campaignIdTextArea.getSelectedText();
-			int campaignId = 17; //default predefined campaign
-			if (campaignIdString != null) {
-				campaignId = Integer.parseInt(campaignIdString);
-			}
+	
+	public void actionPerformed(ActionEvent arg0) {
+		String campaignIdString = (String) campaignIdsComboBox.getSelectedItem();
+		if(campaignIdString != null) try {
+			int campaignId = Integer.parseInt(campaignIdString);
 			campaign = campaignController.getCampaign(campaignId);
 			
 			if(campaign.getCredential() != null) {
@@ -190,9 +184,9 @@ public class MonitorCampaignView implements CaretListener {
 			e.printStackTrace();
 		}
 		Iterator<Campaign> itr = campaigns.iterator();
-		campaignIdTextArea.setText("");
+		campaignIdsComboBox.removeAllItems();
 		while(itr.hasNext()) {
-			campaignIdTextArea.append(String.valueOf(itr.next().getId()) + "\n");
+			campaignIdsComboBox.addItem(String.valueOf(itr.next().getId()));
 		}
 	}
 }
