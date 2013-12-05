@@ -49,41 +49,52 @@ public class AddCampaignView implements ActionListener {
 		viewPanel.setLayout(null);
 		
 		lblName = new JLabel("Name", SwingConstants.RIGHT);
-		lblName.setBounds(240, 53, 76, 25);
+		lblName.setBounds(240, 42, 76, 25);
 		viewPanel.add(lblName);
 		campaignName = new JTextField(20);
-		campaignName.setBounds(334, 53, 295, 25);
+		campaignName.setBounds(334, 42, 295, 25);
 		campaignName.setText("enter campaign name");
 		viewPanel.add(campaignName);
 		
 		lblMessage = new JLabel("Message", SwingConstants.RIGHT);
-		lblMessage.setBounds(240, 131, 76, 25);
+		lblMessage.setBounds(240, 109, 76, 25);
 		viewPanel.add(lblMessage);
 		campaignMessage = new JTextField(20);
-		campaignMessage.setBounds(334, 131, 295, 25);
+		campaignMessage.setBounds(334, 109, 295, 25);
 		campaignMessage.setText("enter campaign message");
 		viewPanel.add(campaignMessage);
 
 		lblInterval = new JLabel("Interval", SwingConstants.RIGHT);
-		lblInterval.setBounds(240, 211, 76, 25);
+		lblInterval.setBounds(240, 176, 76, 25);
 		viewPanel.add(lblInterval);
 		campaignInterval = new JTextField(20);
-		campaignInterval.setBounds(334, 209, 295, 25);
+		campaignInterval.setBounds(336, 176, 295, 25);
 		campaignInterval.setText("enter interval in seconds as an integer");
 		viewPanel.add(campaignInterval);
 		
 		submitButton = new JButton("Add this campaign");
-		submitButton.setBounds(334, 287, 295, 25);
+		submitButton.setBounds(334, 305, 295, 25);
 		submitButton.setActionCommand(submitButtonID);
 		submitButton.addActionListener(this);
 		viewPanel.add(submitButton);
 		
 		addUserButton = new JButton("Add a user to the campaign");
 		addUserButton.setEnabled(false);
-		addUserButton.setBounds(334, 365, 295, 25);
+		addUserButton.setBounds(334, 372, 295, 25);
 		addUserButton.setActionCommand(addUserButtonID);
 		addUserButton.addActionListener(this);
 		viewPanel.add(addUserButton);
+		
+		lblHashtag = new JLabel("#hashtag");
+		lblHashtag.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblHashtag.setBounds(240, 241, 76, 25);
+		viewPanel.add(lblHashtag);
+		
+		hashtagTextField = new JTextField();
+		hashtagTextField.setText("enter #hashtag");
+		hashtagTextField.setBounds(336, 243, 295, 25);
+		viewPanel.add(hashtagTextField);
+		hashtagTextField.setColumns(10);
 	}
 	
 	JPanel getViewPanel() {
@@ -92,6 +103,8 @@ public class AddCampaignView implements ActionListener {
 
 	private Campaign newCampaign = null;
 	private AddUserView addUserView = null;
+	private JLabel lblHashtag;
+	private JTextField hashtagTextField;
 	
 	public void actionPerformed(ActionEvent e) {
 		//System.out.println(e.getActionCommand());
@@ -105,13 +118,14 @@ public class AddCampaignView implements ActionListener {
 			newCampaign.setIntervalInSeconds(Integer.parseInt(campaignInterval.getText()));
 			
 			Monitor monitor = new Monitor();
-			monitor.setHashtagToMonitor("#temporaryHashTag"); // add hashtag input field
-			monitor.setIntervalInSeconds(3);
+			monitor.setHashtagToMonitor(hashtagTextField.getText());
+			monitor.setIntervalInSeconds(newCampaign.getIntervalInSeconds());
 			newCampaign.setMonitor(monitor);			
 			
 			campaignName.setText("");
 			campaignMessage.setText("");
 			campaignInterval.setText("");
+			hashtagTextField.setText("");
 			
 			try {
 				newCampaign = campaignController.addCampaign(newCampaign);
